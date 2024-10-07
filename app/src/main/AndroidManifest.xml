@@ -14,7 +14,7 @@
 
         <!-- Launcher Activity (default activity) -->
         <activity
-            android:name=".Activity.HomeActivity"
+            android:name=".Activity.IntroActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,9 +22,7 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".Activity.IntroActivity"
-            android:exported="false" />
+
 
     </application>
 </manifest>
