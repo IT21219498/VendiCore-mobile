@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".Activity.AddRating">
+    tools:context=".Activity.AddRatingActivity">
 
     <Spinner
         android:id="@+id/vendorSpinner"
@@ -16,6 +16,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="120dp"
         android:layout_marginEnd="16dp"
+        android:entries="@array/vendor_list"
+        android:minHeight="60dp"
         android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@+id/vendorRatingBar"
         app:layout_constraintEnd_toEndOf="parent"

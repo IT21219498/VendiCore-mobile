@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">VendiCore</string>
+
+    <string-array name="vendor_list">
+        <item>Maliban (Pvt) Ltd</item>
+        <item>DSI (Pvt) Ltd</item>
+        <item>Leema Creations</item>
+        <item>Arpico Holdings</item>
+    </string-array>
 </resources>
