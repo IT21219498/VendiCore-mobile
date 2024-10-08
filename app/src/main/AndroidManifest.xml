@@ -13,7 +13,13 @@
         android:theme="@style/Theme.VendiCore"
         tools:targetApi="31">
         <activity
-            android:name=".Activity.AddRating"
+            android:name=".Activity.ProductDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.ViewRatingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.AddRatingActivity"
             android:exported="false" />
         <activity
             android:name=".AddRating"
@@ -27,9 +33,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-
     </application>
 
 </manifest>

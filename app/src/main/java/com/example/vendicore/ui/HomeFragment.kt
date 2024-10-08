@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vendicore.Adapters.CategoriesAdapter
-import com.example.vendicore.Adapters.ProductsAdapter
+import com.example.vendicore.Adapters.ProductAdapter
 import com.example.vendicore.Models.Category
 import com.example.vendicore.Models.Product
 import com.example.vendicore.R
@@ -43,7 +43,7 @@ class HomeFragment : Fragment() {
         val categoriesAdapter = CategoriesAdapter(getCategories())
         categoriesRecyclerView.adapter = categoriesAdapter
 
-        val productsAdapter = ProductsAdapter(getProducts(),this)
+        val productsAdapter = ProductAdapter(getProducts(), requireContext()) // Pass context here
         productsRecyclerView.adapter = productsAdapter
     }
 

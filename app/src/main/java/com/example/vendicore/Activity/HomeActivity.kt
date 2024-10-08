@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vendicore.Adapters.CategoriesAdapter
-import com.example.vendicore.Adapters.ProductsAdapter
+import com.example.vendicore.Adapters.ProductAdapter
 import com.example.vendicore.Models.Category
 import com.example.vendicore.Models.Product
 import com.example.vendicore.R
@@ -40,13 +40,8 @@ class HomeActivity : AppCompatActivity() {
         val categoriesAdapter = CategoriesAdapter(getCategories())
         categoriesRecyclerView.adapter = categoriesAdapter
 
-        if (homeFragment != null) {
-            val productsAdapter = ProductsAdapter(getProducts(), homeFragment)
-            productsRecyclerView.adapter = productsAdapter
-        } else {
-            // Handle the case where HomeFragment is not found
-            // You might want to log an error or show a message to the user
-        }
+        val productsAdapter = ProductAdapter(getProducts(), this) // Pass context here
+        productsRecyclerView.adapter = productsAdapter
     }
 
     // Mock data for categories
