@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vendicore.Adapters.CategoriesAdapter
-import com.example.vendicore.Adapters.ProductsAdapter
+import com.example.vendicore.Adapters.ProductAdapter
 import com.example.vendicore.Models.Category
 import com.example.vendicore.Models.Product
 import com.example.vendicore.R
@@ -33,7 +33,7 @@ class HomeActivity : AppCompatActivity() {
         val categoriesAdapter = CategoriesAdapter(getCategories())
         categoriesRecyclerView.adapter = categoriesAdapter
 
-        val productsAdapter = ProductsAdapter(getProducts())
+        val productsAdapter = ProductAdapter(getProducts(), this) // Pass context here
         productsRecyclerView.adapter = productsAdapter
     }
 
