@@ -43,7 +43,7 @@ class HomeFragment : Fragment() {
         val categoriesAdapter = CategoriesAdapter(getCategories())
         categoriesRecyclerView.adapter = categoriesAdapter
 
-        val productsAdapter = ProductsAdapter(getProducts())
+        val productsAdapter = ProductsAdapter(getProducts(),this)
         productsRecyclerView.adapter = productsAdapter
     }
 
@@ -60,8 +60,8 @@ class HomeFragment : Fragment() {
     // Mock data for products
     private fun getProducts(): List<Product> {
         return listOf(
-            Product("Diamond Ring", 4.3, 2500.0, R.drawable.diamond_ring),
-            Product("Gold Bracelet", 5.0, 3000.0, R.drawable.gold_bracelet)
+            Product("Diamond Ring", 4.3, 2500.0, "Diamond Inc.",R.drawable.diamond_ring ),
+            Product("Gold Bracelet", 5.0, 3000.0, "Gold Gems", R.drawable.gold_bracelet)
         )
     }
 }
