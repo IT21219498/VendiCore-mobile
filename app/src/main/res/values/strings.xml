@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">VendiCore</string>
+    <string name="close">close button\n\n</string>
+    <string name="remove_item">remove cart item</string>
 
     <string-array name="vendor_list">
         <item>Maliban (Pvt) Ltd</item>

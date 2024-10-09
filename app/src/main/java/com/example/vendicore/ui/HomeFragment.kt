@@ -43,7 +43,7 @@ class HomeFragment : Fragment() {
         val categoriesAdapter = CategoriesAdapter(getCategories())
         categoriesRecyclerView.adapter = categoriesAdapter
 
-        val productsAdapter = ProductAdapter(getProducts(), requireContext()) // Pass context here
+        val productsAdapter = ProductAdapter(getProducts(), requireContext() ,  this)
         productsRecyclerView.adapter = productsAdapter
     }
 

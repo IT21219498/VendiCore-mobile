@@ -2,7 +2,6 @@ package com.example.vendicore.Activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vendicore.Adapters.CategoriesAdapter
@@ -13,6 +12,7 @@ import com.example.vendicore.R
 import com.example.vendicore.ui.HomeFragment
 
 class HomeActivity : AppCompatActivity() {
+
     private lateinit var categoriesRecyclerView: RecyclerView
     private lateinit var productsRecyclerView: RecyclerView
 
@@ -30,17 +30,11 @@ class HomeActivity : AppCompatActivity() {
         productsRecyclerView.layoutManager =
             LinearLayoutManager(this)
 
-        // Get HomeFragment instance
-        val homeFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
-            ?.childFragmentManager
-            ?.fragments
-            ?.firstOrNull { it is HomeFragment } as? HomeFragment
-
         // Set adapters
         val categoriesAdapter = CategoriesAdapter(getCategories())
         categoriesRecyclerView.adapter = categoriesAdapter
 
-        val productsAdapter = ProductAdapter(getProducts(), this) // Pass context here
+        val productsAdapter = ProductAdapter(getProducts(), this ,  HomeFragment())
         productsRecyclerView.adapter = productsAdapter
     }
 
