@@ -1,26 +1,24 @@
 package com.example.vendicore.Adapters
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vendicore.Activity.ProductDetailsActivity
-import com.example.vendicore.Models.CartItem
 import com.example.vendicore.Models.Product
 import com.example.vendicore.R
-import com.example.vendicore.ViewModels.CartViewModel
 import com.example.vendicore.ui.HomeFragment
+import com.squareup.picasso.Picasso
 
-class ProductAdapter(private val products: List<Product>, private val context: Context,private val fragment: HomeFragment) :
-    RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
+class ProductAdapter(
+    private var products: List<Product>,
+    private val context: Context,
+    private val fragment: HomeFragment?
+) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     inner class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val productImage: ImageView = itemView.findViewById(R.id.productImage)
@@ -52,6 +50,7 @@ class ProductAdapter(private val products: List<Product>, private val context: C
                 showAddToCartDialog(product)
             }
         }
+        val addToCartButton: ImageView = itemView.findViewById(R.id.addToCartButton)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
@@ -62,20 +61,30 @@ class ProductAdapter(private val products: List<Product>, private val context: C
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = products[position]
-        holder.productImage.setImageResource(product.imageResId)
+        Picasso.get().load(product.imageUrl).into(holder.productImage)
         holder.productName.text = product.name
         holder.productRating.text = "${product.rating} ★"
         holder.productPrice.text = "Rs. ${product.price}"
-
-        // Optional: Set up the add to cart button logic here if needed
-
+        holder.addToCartButton.setOnClickListener {
+            // Implement add to cart logic here
+        }
+        holder.itemView.setOnClickListener {
+            val intent = Intent(context, ProductDetailsActivity::class.java)
+            intent.putExtra("PRODUCT_ID", product.id)
+            context.startActivity(intent)
+        }
     }
 
-    private val cartViewModel: CartViewModel by lazy {
-        ViewModelProvider(fragment.requireActivity()).get(CartViewModel::class.java)
+    override fun getItemCount(): Int {
+        return products.size
     }
 
-    private fun showAddToCartDialog(product: Product) {
+
+
+    
+
+
+private fun showAddToCartDialog(product: Product) {
         val dialogView = LayoutInflater.from(fragment.requireContext())
             .inflate(R.layout.dialog_add_to_cart, null)
 
@@ -139,8 +148,10 @@ class ProductAdapter(private val products: List<Product>, private val context: C
         dialog.show()
     }
 
-    override fun getItemCount() = products.size
+
+
+    fun updateProducts(newProducts: List<Product>) {
+        products = newProducts
+        notifyDataSetChanged()
+    }
 }
-
-
-
