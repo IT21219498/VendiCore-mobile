@@ -137,7 +137,8 @@ class ProductAdapter(
                 product.price,
                 quantity,
                 product.imageUrl,
-                "Diamond inc"
+                "Diamond inc",
+                product.id
             )
             // Assuming you have a viewModel for cart
              cartViewModel.addItem(cartItem)

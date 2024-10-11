@@ -104,7 +104,8 @@ class ProductDetailsActivity : AppCompatActivity() {
                 productPrice = product.price,
                 quantity = quantity,
                 imageUrl = product.imageUrl,
-                vendorName =  "Diamond inc"
+                vendorName =  "Diamond inc",
+                productId = product.id
             )
             cartViewModel.addItem(cartItem)
             dialog.dismiss()

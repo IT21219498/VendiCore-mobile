@@ -1,5 +1,4 @@
 package com.example.vendicore.network
-
 import com.example.vendicore.Models.Category
 import com.example.vendicore.Models.Product
 import com.example.vendicore.Models.Review
@@ -90,4 +89,14 @@ interface ApiService {
 
     @PUT("api/Rating/{id}/comment")  // Assuming this endpoint updates a review by its ID
     fun updateReview(@Path("id") id: String, @Body newComment: String): Call<Void>
+
+    @POST("api/Order/addOrderItems")
+    fun sendCartItems(@Body cartItems: CartRequest): Call<Void>
+
 }
+
+data class CartRequest(
+    val orderId: String,
+    val customerId: String,
+    val items: List<kotlin. Any>
+)
