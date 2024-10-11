@@ -47,7 +47,7 @@ class CartViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     Log.d("CartViewModel", "Cart items sent successfully")
                 } else {
-                    Log.e("CartViewModel", "Failed to send cart items: ${response.errorBody()?.string()}")
+                    Log.e("Failed to send cart items:", "Failed to send cart items: ${response.errorBody()?.string()}")
                 }
             }
 
