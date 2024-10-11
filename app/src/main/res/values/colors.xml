@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Primary Colors -->
-    <color name="primaryColor">#AAC8A7</color> <!-- Deep purple -->
-    <color name="primaryLightColor">#F6FFDE</color> <!-- Light purple -->
-    <color name="primaryDarkColor">#99A98F</color> <!-- Dark purple -->
-    <color name="accentColor">#E3F2C1</color> <!-- Teal -->
+    <color name="primaryColor">#8E44AD</color> <!-- Deep purple -->
+    <color name="primaryLightColor">#DCC6E0</color> <!-- Light lavender -->
+    <color name="primaryDarkColor">#6C3483</color> <!-- Dark purple -->
+    <color name="accentColor">#BB8FCE</color> <!-- Soft purple -->
 
     <!-- Neutral Colors -->
     <color name="black">#000000</color>
