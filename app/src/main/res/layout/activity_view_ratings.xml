@@ -5,14 +5,14 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.ViewRatingsActivity"
-    android:padding="16dp">
+    android:padding="16dp"
+    tools:context=".Activity.ViewRatingsActivity">
 
     <TextView
         android:id="@+id/reviewsTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="5dp"
         android:paddingBottom="8dp"
         android:text="Customer Reviews"
         android:textSize="24sp"
@@ -22,11 +22,25 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
+        android:id="@+id/vendorSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="16dp"
+        android:minHeight="48dp"
+        android:padding="10dp"
+        android:entries="@array/vendor_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filterSpinner" />
+
+    <Spinner
         android:id="@+id/filterSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="16dp"
         android:minHeight="48dp"
         android:padding="10dp"
@@ -39,12 +53,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="16dp"
         android:layout_weight="1"
         android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filterSpinner" />
+        app:layout_constraintTop_toBottomOf="@+id/vendorSpinner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

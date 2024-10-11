@@ -1,39 +1,33 @@
 package com.example.vendicore.Activity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vendicore.Adapters.ReviewsAdapter
-import com.example.vendicore.Models.Review
+import com.example.vendicore.Models.VendorReview
 import com.example.vendicore.R
+import com.example.vendicore.network.RetrofitClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ViewRatingsActivity : AppCompatActivity() {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
-//        setContentView(R.layout.activity_view_ratings)
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-//            insets
-//        }
-//    }
 
     private lateinit var reviewsRecyclerView: RecyclerView
     private lateinit var filterSpinner: Spinner
+    private lateinit var vendorSpinner: Spinner
     private lateinit var reviewsAdapter: ReviewsAdapter
-    private lateinit var reviewsList: MutableList<Review>  // Model to store reviews
+    private lateinit var reviewsList: MutableList<VendorReview>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,30 +35,39 @@ class ViewRatingsActivity : AppCompatActivity() {
 
         reviewsRecyclerView = findViewById(R.id.reviewsRecyclerView)
         filterSpinner = findViewById(R.id.filterSpinner)
+        vendorSpinner = findViewById(R.id.vendorSpinner)
 
         // Setup RecyclerView
         reviewsList = mutableListOf()
-//        reviewsAdapter = ReviewsAdapter(reviewsList)
-        reviewsAdapter = ReviewsAdapter(reviewsList) { review ->
-            showEditCommentDialog(review) // Show dialog when item is clicked
-        }
+        reviewsAdapter = ReviewsAdapter(reviewsList) { review -> showEditCommentDialog(review) }
         reviewsRecyclerView.layoutManager = LinearLayoutManager(this)
         reviewsRecyclerView.adapter = reviewsAdapter
 
-        // Load static reviews
-        loadStaticReviews()
+        // Load reviews from backend
+        loadReviews()
 
-        // Populate the filter dropdown with options like "All Ratings", "5 Stars", "4 Stars", etc.
+        // Populate the filter dropdown
         val filterOptions = listOf("All Ratings", "5 Stars", "4 Stars", "3 Stars", "2 Stars", "1 Star")
         val filterAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, filterOptions)
         filterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         filterSpinner.adapter = filterAdapter
 
-        // Set filter logic
+        // Set rating filter logic
         filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val selectedRating = position // Position corresponds to star rating (0 for All Ratings)
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long){
+                val selectedRating = position  // Position corresponds to star rating (0 for All Ratings)
                 filterReviewsByRating(selectedRating)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Do nothing
+            }
+        }
+
+        //set vendor filter logic
+        vendorSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                filterReviews()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -73,7 +76,29 @@ class ViewRatingsActivity : AppCompatActivity() {
         }
     }
 
-    private fun showEditCommentDialog(review: Review) {
+    private fun loadReviews() {
+        val apiService = RetrofitClient.instance
+
+        apiService.getReviews().enqueue(object : Callback<List<VendorReview>> {
+            override fun onResponse(call: Call<List<VendorReview>>, response: Response<List<VendorReview>>) {
+                if (response.isSuccessful) {
+                    reviewsList.clear()
+                    response.body()?.let { reviewsList.addAll(it) }
+                    reviewsAdapter.notifyDataSetChanged()
+                    Log.d("ViewRatingsActivity", "Reviews loaded successfully: $reviewsList")
+                } else {
+                    Log.e("ViewRatingsActivity", "Failed to load reviews: ${response.errorBody()?.string()}")
+                }
+            }
+
+            override fun onFailure(call: Call<List<VendorReview>>, t: Throwable) {
+                Log.e("ViewRatingsActivity", "API call failed: ${t.message}")
+                Toast.makeText(this@ViewRatingsActivity, "Failed to load reviews", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun showEditCommentDialog(review: VendorReview) {
         // Inflate the dialog layout
         val dialogView = layoutInflater.inflate(R.layout.dialog_update_comment, null)
         val editComment = dialogView.findViewById<EditText>(R.id.editTextComment)
@@ -91,44 +116,66 @@ class ViewRatingsActivity : AppCompatActivity() {
 
         saveButton.setOnClickListener {
             val updatedComment = editComment.text.toString()
-            // Update the review object (make sure your Review model is mutable or use another way to update the comment)
-            review.comment = updatedComment
+            review.comment = updatedComment  // Update the review object
 
-            // Notify the adapter about the change
-            reviewsAdapter.notifyDataSetChanged()
+            // Call backend to update the review
+            updateReview(review)
+
             dialog.dismiss()
         }
 
         dialog.show()
     }
 
-    // Function to load static reviews
-    private fun loadStaticReviews() {
-        // Static list of reviews
-        val staticReviews = listOf(
-            Review("Arpico Holdings", 5f, "Great service!", "12th October 2024"),
-            Review("Leema creations", 4f, "Good quality products.", "11th October 2024"),
-//            ReviewModel("Vendor 3", 3f, "Average experience.", "10th October 2024"),
-//            ReviewModel("Vendor 1", 2f, "Could be better.", "9th October 2024"),
-//            ReviewModel("Vendor 2", 5f, "Excellent delivery!", "8th October 2024")
-        )
+    private fun updateReview(review: VendorReview) {
+        val apiService = RetrofitClient.instance
 
-        reviewsList.clear()
-        reviewsList.addAll(staticReviews)
+        // Extracting the string representation of the ObjectId (from review.id)
+        val objectId = review.id?.toString() ?: return Toast.makeText(this, "Review ID is missing", Toast.LENGTH_SHORT).show()
 
-        // Notify adapter of the change
-        reviewsAdapter.notifyDataSetChanged()
+        // Use only the string ObjectId, not the whole Id object
+        apiService.updateReview(objectId, review.comment).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(this@ViewRatingsActivity, "Review updated successfully", Toast.LENGTH_SHORT).show()
+                    reviewsAdapter.notifyDataSetChanged()
+                } else {
+                    Log.e("ViewRatingsActivity", "Failed to update review: ${response.errorBody()?.string()}")
+                    Toast.makeText(this@ViewRatingsActivity, "Failed to update Comment", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Log.e("ViewRatingsActivity", "API call failed: ${t.message}")
+                Toast.makeText(this@ViewRatingsActivity, "Failed to update Comment", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
-    // Function to filter reviews based on selected rating
-    private fun filterReviewsByRating(selectedRating: Int) {
-        val filteredReviews = if (selectedRating == 0) {
-            reviewsList  // All Ratings
-        } else {
-            reviewsList.filter { it.rating.toInt() == selectedRating }
+    private fun filterReviews() {
+        val selectedRatingPosition = filterSpinner.selectedItemPosition
+        val selectedVendor = vendorSpinner.selectedItem.toString()
+
+        val filteredReviews = reviewsList.filter { review ->
+            val ratingMatches = if (selectedRatingPosition == 0) true else review.rating.toInt() == (6 - selectedRatingPosition)
+            val vendorMatches = selectedVendor == "All Vendors" || review.vendorId == selectedVendor
+            ratingMatches && vendorMatches
         }
 
         reviewsAdapter.updateList(filteredReviews)
     }
 
+    private fun filterReviewsByRating(selectedRatingPosition: Int) {
+        val filteredReviews = when (selectedRatingPosition) {
+            0 -> reviewsList  // All Ratings
+            1 -> reviewsList.filter { it.rating.toInt() == 5 }  // 5 Stars
+            2 -> reviewsList.filter { it.rating.toInt() == 4 }  // 4 Stars
+            3 -> reviewsList.filter { it.rating.toInt() == 3 }  // 3 Stars
+            4 -> reviewsList.filter { it.rating.toInt() == 2 }  // 2 Stars
+            5 -> reviewsList.filter { it.rating.toInt() == 1 }  // 1 Star
+            else -> reviewsList  // In case something goes wrong, show all reviews
+        }
+
+        reviewsAdapter.updateList(filteredReviews)
+    }
 }

@@ -2,7 +2,10 @@ package com.example.vendicore.network
 
 import com.example.vendicore.Models.Category
 import com.example.vendicore.Models.Product
+import com.example.vendicore.Models.Review
+import com.example.vendicore.Models.VendorReview
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Body
@@ -78,4 +81,14 @@ interface ApiService {
 
     @GET("api/Products/search/{name}")
     fun searchProductsByName(@Path("name") name: String): Call<List<Product>>
+
+    // POST method for submitting a rating
+    @POST("api/Rating/newRating")
+    fun submitRating(@Body rating: Review): Call<Void>
+
+    @GET("api/Rating")  // Adjust the endpoint as necessary
+    fun getReviews(): Call<List<VendorReview>>
+
+    @PUT("api/Rating/{id}/comment")  // Assuming this endpoint updates a review by its ID
+    fun updateReview(@Path("id") id: String, @Body newComment: String): Call<Void>
 }
