@@ -1,9 +1,29 @@
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/categoryName"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="110dp"
+    android:layout_height="120dp"
+    android:orientation="vertical"
     android:padding="8dp"
-    android:layout_marginEnd="8dp"
-    android:textColor="@color/textPrimary"
-    android:textSize="16sp"
-    android:background="@drawable/category_background"/>
+    android:background="@drawable/category_item_background"
+    android:layout_margin="8dp"
+    android:elevation="4dp">
+
+    <ImageView
+        android:id="@+id/categoryImage"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        android:src="@drawable/sample_category_image" />
+
+    <TextView
+        android:id="@+id/categoryName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:textSize="14sp"
+        android:textStyle="italic"
+        android:gravity="center"
+        android:text="Category Name"
+        android:textColor="@android:color/black" />
+</LinearLayout>

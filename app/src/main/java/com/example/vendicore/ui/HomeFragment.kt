@@ -5,63 +5,75 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.vendicore.Adapters.CategoriesAdapter
 import com.example.vendicore.Adapters.ProductAdapter
-import com.example.vendicore.Models.Category
-import com.example.vendicore.Models.Product
-import com.example.vendicore.R
+import com.example.vendicore.ViewModels.CategoryViewModel
+import com.example.vendicore.ViewModels.ProductViewModel
+import com.example.vendicore.databinding.ActivityHomeBinding
 
 class HomeFragment : Fragment() {
-
-    private lateinit var categoriesRecyclerView: RecyclerView
-    private lateinit var productsRecyclerView: RecyclerView
+    private var _binding: ActivityHomeBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var productViewModel: ProductViewModel
+    private lateinit var productAdapter: ProductAdapter
+    private lateinit var categoryViewModel: CategoryViewModel
+    private lateinit var categoryAdapter: CategoriesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.activity_home, container, false)
+    ): View {
+        _binding = ActivityHomeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        productViewModel = ViewModelProvider(this).get(ProductViewModel::class.java)
+        categoryViewModel = ViewModelProvider(this).get(CategoryViewModel::class.java)
+        productAdapter = ProductAdapter(emptyList(), requireContext(), this)
+        categoryAdapter = CategoriesAdapter(emptyList(), requireContext())
+        binding.productsRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.productsRecyclerView.adapter = productAdapter
 
-        // Initialize RecyclerViews
-        categoriesRecyclerView = view.findViewById(R.id.categoriesRecyclerView)
-        productsRecyclerView = view.findViewById(R.id.productsRecyclerView)
+        binding.categoriesRecyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.categoriesRecyclerView.adapter = categoryAdapter
 
-        // Set layout managers
-        categoriesRecyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        productsRecyclerView.layoutManager =
-            LinearLayoutManager(requireContext())
+        productViewModel.products.observe(viewLifecycleOwner, Observer { products ->
+            productAdapter.updateProducts(products)
+        })
 
-        // Set adapters
-        val categoriesAdapter = CategoriesAdapter(getCategories())
-        categoriesRecyclerView.adapter = categoriesAdapter
+        categoryViewModel.categories.observe(viewLifecycleOwner, Observer { categories ->
+            categoryAdapter.updateCategories(categories)
+        })
 
-        val productsAdapter = ProductAdapter(getProducts(), requireContext() ,  this)
-        productsRecyclerView.adapter = productsAdapter
+        binding.searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null) {
+                    productViewModel.searchProductsByName(query)
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText != null && newText.isEmpty()) {
+                    productViewModel.fetchProducts()
+                }
+                return true
+            }
+        })
+
+        productViewModel.fetchProducts()
+        categoryViewModel.fetchCategories()
+
     }
 
-    // Mock data for categories
-    private fun getCategories(): List<Category> {
-        return listOf(
-            Category("Sale"),
-            Category("Celebration"),
-            Category("Arrivals"),
-            Category("Bestsellers")
-        )
-    }
-
-    // Mock data for products
-    private fun getProducts(): List<Product> {
-        return listOf(
-            Product("Diamond Ring", 4.3, 2500.0, "Diamond Inc.",R.drawable.diamond_ring ),
-            Product("Gold Bracelet", 5.0, 3000.0, "Gold Gems", R.drawable.gold_bracelet)
-        )
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
