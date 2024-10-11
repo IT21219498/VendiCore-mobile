@@ -63,9 +63,8 @@ fun showAddToCartDialog(owner: ViewModelStoreOwner, context: Context, product: P
         val cartItem = CartItem(
             product.name,
             product.price,
-            product.imageResId,
             quantity,
-            product.imageResId,
+            product.imageUrl,
             product.vendorName
         )
         Log.d("AddToCartDialog", "Adding item to cart: $cartItem")

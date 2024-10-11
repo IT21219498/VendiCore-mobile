@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.vendicore.Models.CartItem
 import com.example.vendicore.R
 import com.example.vendicore.ViewModels.CartViewModel
+import com.squareup.picasso.Picasso
 
 class CartAdapter(
     private var cartItems: List<CartItem>,
@@ -32,11 +33,12 @@ class CartAdapter(
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
         val cartItem = cartItems[position]
-        holder.cartProductImage.setImageResource(cartItem.productImageResId)
+
+        Picasso.get().load(cartItem.imageUrl).into(holder.cartProductImage)
         holder.cartProductName.text = cartItem.productName
         holder.cartProductVendor.text = "Vendor: ${cartItem.vendorName}"
-        holder.cartProductPrice.text = "Price: $${cartItem.productPrice}"
-        holder.cartProductTotalPrice.text = "Total: $${cartItem.productPrice * cartItem.quantity}"
+        holder.cartProductPrice.text = "Price: ${cartItem.productPrice}"
+        holder.cartProductTotalPrice.text = "Total: ${cartItem.productPrice * cartItem.quantity}"
 
         holder.buttonRemove.setOnClickListener {
             cartViewModel.removeItem(cartItem)
