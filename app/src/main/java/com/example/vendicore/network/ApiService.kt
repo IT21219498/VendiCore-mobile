@@ -48,9 +48,7 @@ data class UpdateApiResponse(
 )
 
 interface ApiService {
-
-
-      @GET("api/Products/products")
+    @GET("api/Products/activeproducts")
     fun getProducts(): Call<List<Product>>
 
     @POST("api/Customer/login")

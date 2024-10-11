@@ -49,6 +49,7 @@ class ProductDetailsActivity : AppCompatActivity() {
         binding.productName.text = product.name
         binding.productPrice.text = "Rs. ${product.price}"
         binding.productDescription.text = product.description
+        binding.vendorName.text = "Vendor: ${product.supplierName}"
         Picasso.get().load(product.imageUrl).into(binding.productImage)
 
         binding.addToCartButton.setOnClickListener {

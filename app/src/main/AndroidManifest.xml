@@ -29,6 +29,7 @@
             android:exported="false" />
         <activity
             android:name=".Activity.RegisterActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="false" />
         <activity
             android:name=".Activity.IntroActivity"
@@ -38,6 +39,7 @@
             android:exported="false" /> <!-- Launcher Activity (default activity) -->
         <activity
             android:name=".Activity.LoginActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
