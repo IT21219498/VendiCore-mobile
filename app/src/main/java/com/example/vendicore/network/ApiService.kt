@@ -1,9 +1,12 @@
 package com.example.vendicore.network
 
+import com.example.vendicore.Models.CartItem
 import com.example.vendicore.Models.Category
 import com.example.vendicore.Models.Product
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface ApiService {
@@ -21,4 +24,13 @@ interface ApiService {
 
     @GET("api/Products/search/{name}")
     fun searchProductsByName(@Path("name") name: String): Call<List<Product>>
+
+    @POST("api/Order/addOrderItems")
+    fun sendCartItems(@Body cartItems: CartRequest): Call<Void>
 }
+
+data class CartRequest(
+    val orderId: String,
+    val customerId: String,
+    val items: List<kotlin. Any>
+)

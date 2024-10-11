@@ -65,7 +65,8 @@ fun showAddToCartDialog(owner: ViewModelStoreOwner, context: Context, product: P
             product.price,
             quantity,
             product.imageUrl,
-            product.vendorName
+            product.vendorName,
+            product.id
         )
         Log.d("AddToCartDialog", "Adding item to cart: $cartItem")
         cartViewModel.addItem(cartItem)
